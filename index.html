@@ -9,32 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --accent:oklch(0.31 0.13 277);
-    --accent-2:oklch(0.43 0.15 277);
-    --gold:oklch(0.81 0.16 85);
-    --bg:oklch(0.968 0.006 277);
-    --surface:oklch(0.988 0.004 277);
-    --surface-2:oklch(0.958 0.008 277);
-    --ink:oklch(0.23 0.018 277);
-    --ink-dim:oklch(0.48 0.027 277);
-    --ink-faint:oklch(0.66 0.030 277);
-    --line:oklch(0.922 0.009 277);
-    --line-strong:oklch(0.872 0.014 277);
-    --good:oklch(0.52 0.10 162);
-    --dark:oklch(0.165 0.013 277);
-    --ink-on-dark:oklch(0.85 0.013 277);
+    --accent:oklch(0.31 0.13 277);--accent-2:oklch(0.43 0.15 277);--gold:oklch(0.81 0.16 85);
+    --bg:oklch(0.968 0.006 277);--surface:oklch(0.988 0.004 277);--surface-2:oklch(0.958 0.008 277);
+    --ink:oklch(0.23 0.018 277);--ink-dim:oklch(0.48 0.027 277);--ink-faint:oklch(0.66 0.030 277);
+    --line:oklch(0.922 0.009 277);--line-strong:oklch(0.872 0.014 277);
+    --good:oklch(0.52 0.10 162);--bad:oklch(0.55 0.17 25);--warn:oklch(0.62 0.15 55);
+    --dark:oklch(0.165 0.013 277);--ink-on-dark:oklch(0.85 0.013 277);
     --sans:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    --e-quint:cubic-bezier(.22,1,.36,1);
-    --e-exit:cubic-bezier(.16,1,.3,1);
+    --e-quint:cubic-bezier(.22,1,.36,1);--e-exit:cubic-bezier(.16,1,.3,1);
   }
-  /* hex fallbacks first for older devices, oklch overrides on supporting browsers */
   @supports not (color: oklch(0 0 0)){
-    :root{
-      --accent:#1a1f71;--accent-2:#3742a8;--gold:#f7b600;--bg:#f3f5fa;--surface:#fafbfe;--surface-2:#eef1f8;
+    :root{--accent:#1a1f71;--accent-2:#3742a8;--gold:#f7b600;--bg:#f3f5fa;--surface:#fafbfe;--surface-2:#eef1f8;
       --ink:#1a1d28;--ink-dim:#5b6274;--ink-faint:#929ab0;--line:#e5e8f1;--line-strong:#d6dae7;
-      --good:#1a7a57;--dark:#0e1016;--ink-on-dark:#cbd0dd;
-    }
+      --good:#1a7a57;--bad:#c0392b;--warn:#b9770e;--dark:#0e1016;--ink-on-dark:#cbd0dd;}
   }
   *{box-sizing:border-box}
   html,body{margin:0}
@@ -42,12 +30,11 @@
     line-height:1.5;font-weight:400;-webkit-tap-highlight-color:transparent}
   .wrap{max-width:448px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 18px max(44px,env(safe-area-inset-bottom))}
   [data-go],[data-enter]{cursor:pointer;touch-action:manipulation}
-
   .visa{font-weight:800;font-style:italic;color:var(--accent);position:relative;display:inline-block;line-height:1}
   .visa::after{content:"";position:absolute;right:-3px;top:-2px;width:6px;height:2.5px;background:var(--gold);border-radius:1px;transform:skewX(-12deg)}
   .protected{color:var(--accent-2);font-weight:600}
 
-  /* ============ SCENE 0 — the prompt ============ */
+  /* scene 0 */
   #scene0{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:24px 18px;transition:opacity .5s var(--e-exit),transform .5s var(--e-exit)}
   #scene0.out{opacity:0;transform:translateY(-14px);pointer-events:none}
@@ -56,76 +43,58 @@
   .prompt{background:var(--surface);border:1.5px solid var(--line-strong);border-radius:16px;padding:4px;
     transition:border-color .25s var(--e-quint),box-shadow .25s var(--e-quint)}
   .prompt.focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in oklch,var(--accent) 10%,transparent)}
-  .prompt.fire{box-shadow:0 0 0 5px color-mix(in oklch,var(--accent) 16%,transparent)}
   .prow{display:flex;align-items:center;gap:10px;padding:13px 12px 13px 15px}
   .ptext{flex:1;min-width:0;font-size:15.5px;color:var(--ink);line-height:1.35;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
   .ptext.empty{color:var(--ink-faint)}
   .caret{display:inline-block;width:2px;height:18px;background:var(--accent);vertical-align:-3px;margin-left:1px}
   .caret.blink{animation:blink 1.05s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
-  .send{flex:none;width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;
-    display:grid;place-items:center;font-size:16px;transition:transform .12s var(--e-quint),filter .12s}
+  .send{flex:none;width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:16px;transition:transform .12s var(--e-quint),filter .12s}
   .send.press{transform:scale(.9);filter:brightness(1.25)}
-  .caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 8px 5px;
-    opacity:0;transform:translateY(5px);transition:opacity .45s var(--e-quint),transform .45s var(--e-quint)}
+  .caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 8px 5px;opacity:0;transform:translateY(5px);transition:opacity .45s var(--e-quint),transform .45s var(--e-quint)}
   .caption.show{opacity:1;transform:none}
   .brand{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;white-space:nowrap}
   .visa.s{font-size:15px}
   .est{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
   .est .pre{color:var(--ink-dim)}
-  .hint{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;font-size:12.5px;color:var(--ink-faint);transition:opacity .2s}
+  .hint{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;font-size:12.5px;color:var(--ink-faint)}
   .hint b{color:var(--accent);font-weight:600}
-  .key{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border:1px solid var(--line-strong);
-    border-bottom-width:2px;border-radius:6px;background:var(--surface);font-size:12px;color:var(--ink-dim);font-family:var(--mono);
-    transition:transform .1s var(--e-quint),border-bottom-width .1s}
-  .key.press{transform:translateY(1px);border-bottom-width:1px;background:var(--surface-2)}
 
-  /* ============ APP — the drill-down ============ */
+  /* app */
   #app{display:none}
   .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600}
   h1{font-size:clamp(23px,7vw,28px);line-height:1.12;letter-spacing:-.028em;margin:7px 0 5px;font-weight:600}
   .lede{color:var(--ink-dim);font-size:14px;margin:0 0 18px}
-  .lede b{color:var(--ink);font-weight:600}
   .crumbs{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin:0 0 18px}
-  .crumb{color:var(--ink-faint);transition:color .2s var(--e-quint)}
-  .crumb.link:active{color:var(--accent)}
+  .crumb{color:var(--ink-faint)}
   .crumb.on{color:var(--accent)}
   .sepc{color:var(--line-strong)}
 
   .level{display:none}
   .level.show{display:block}
   .level.show > .stagger{opacity:0;transform:translateY(9px);animation:rise .46s var(--e-quint) forwards}
-  .level.show > .stagger:nth-child(1){animation-delay:.02s}
-  .level.show > .stagger:nth-child(2){animation-delay:.08s}
-  .level.show > .stagger:nth-child(3){animation-delay:.14s}
-  .level.show > .stagger:nth-child(4){animation-delay:.20s}
-  .level.show > .stagger:nth-child(5){animation-delay:.26s}
-  .level.show > .stagger:nth-child(6){animation-delay:.32s}
-  .level.show > .stagger:nth-child(7){animation-delay:.38s}
-  .level.show > .stagger:nth-child(8){animation-delay:.44s}
+  .level.show > .stagger:nth-child(1){animation-delay:.02s}.level.show > .stagger:nth-child(2){animation-delay:.08s}
+  .level.show > .stagger:nth-child(3){animation-delay:.14s}.level.show > .stagger:nth-child(4){animation-delay:.20s}
+  .level.show > .stagger:nth-child(5){animation-delay:.26s}.level.show > .stagger:nth-child(6){animation-delay:.32s}
+  .level.show > .stagger:nth-child(7){animation-delay:.38s}.level.show > .stagger:nth-child(8){animation-delay:.44s}
   @keyframes rise{to{opacity:1;transform:none}}
 
   .node{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 15px;
     transition:border-color .18s var(--e-quint),transform .12s var(--e-quint),box-shadow .18s var(--e-quint)}
   .node .top{display:flex;align-items:center;gap:11px}
-  .num{flex:none;width:22px;height:22px;border-radius:6px;background:var(--surface-2);color:var(--accent);
-    font-family:var(--mono);font-size:11px;font-weight:500;display:grid;place-items:center}
+  .num{flex:none;width:22px;height:22px;border-radius:6px;background:var(--surface-2);color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:500;display:grid;place-items:center}
   .node.lead .num{background:var(--accent);color:#fff}
   .node h3{font-size:14.5px;font-weight:600;margin:0;flex:1;letter-spacing:-.01em}
-  .node .more{font-size:14px;font-weight:600;color:var(--accent);white-space:nowrap}
+  .node .more{font-size:14px;font-weight:600;color:var(--accent)}
   .node p{font-size:12.5px;color:var(--ink-dim);margin:8px 0 0;padding-left:33px}
   .node:active{border-color:var(--accent);transform:scale(.992)}
-  @media (hover:hover){
-    .node:hover{border-color:var(--line-strong);transform:translateY(-1px);box-shadow:0 10px 24px -18px rgba(20,22,30,.5)}
-  }
+  @media (hover:hover){.node:hover{border-color:var(--line-strong);transform:translateY(-1px);box-shadow:0 10px 24px -18px rgba(20,22,30,.5)}}
 
   .link-rail{height:20px;margin-left:25px;position:relative}
-  .link-rail::before{content:"";position:absolute;left:0;top:-1px;bottom:-1px;width:1px;
-    background:repeating-linear-gradient(var(--line-strong) 0 3px,transparent 3px 7px)}
+  .link-rail::before{content:"";position:absolute;left:0;top:-1px;bottom:-1px;width:1px;background:repeating-linear-gradient(var(--line-strong) 0 3px,transparent 3px 7px)}
   .link-rail .bead{position:absolute;left:-2px;top:0;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.5;animation:bead 3s linear infinite}
   @keyframes bead{0%{transform:translateY(-3px);opacity:0}15%{opacity:.5}85%{opacity:.5}100%{transform:translateY(20px);opacity:0}}
-  .link-rail.d1 .bead{animation-delay:0s}.link-rail.d2 .bead{animation-delay:.5s}
-  .link-rail.d3 .bead{animation-delay:1s}.link-rail.d4 .bead{animation-delay:1.5s}
+  .link-rail.d1 .bead{animation-delay:0s}.link-rail.d2 .bead{animation-delay:.5s}.link-rail.d3 .bead{animation-delay:1s}.link-rail.d4 .bead{animation-delay:1.5s}
   .loop{display:flex;align-items:center;gap:9px;margin:12px 2px 0;font-size:12px;color:var(--accent);font-weight:600}
   .loop .g{font-size:15px}
 
@@ -134,63 +103,51 @@
   .tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin:0 0 16px}
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 12px}
   .tile .v{font-family:var(--mono);font-size:18px;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
-  .tile .v.accent{color:var(--accent)}
-  .tile .v.good{color:var(--good)}
+  .tile .v.accent{color:var(--accent)}.tile .v.good{color:var(--good)}.tile .v.bad{color:var(--bad)}.tile .v.warn{color:var(--warn)}
   .tile .l{font-size:11px;color:var(--ink-dim);margin-top:4px;line-height:1.3}
   .say{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 16px;margin:0 0 16px}
   .say p{margin:0;font-size:13.5px;color:var(--ink);line-height:1.6}
   .say p + p{margin-top:9px;color:var(--ink-dim)}
 
   .echo{background:var(--dark);border-radius:12px;padding:13px 14px;margin:0 0 18px;font-family:var(--mono);font-size:12.5px;color:var(--ink-on-dark)}
-  .echo .p{color:var(--ink-faint)}
-  .echo .row2{margin-top:8px;font-size:11.5px}
-  .echo .v{font-style:italic;font-weight:800;color:#aab2ff}
+  .echo .p{color:var(--ink-faint)}.echo .row2{margin-top:8px;font-size:11.5px}.echo .v{font-style:italic;font-weight:800;color:#aab2ff}
+  .decision{background:var(--surface-2);background:color-mix(in oklch,var(--accent) 6%,var(--surface));
+    border:1px solid var(--line-strong);border:1px solid color-mix(in oklch,var(--accent) 22%,var(--line));
+    border-radius:12px;padding:12px 14px;margin:0 0 18px;font-size:13px;line-height:1.55;color:var(--ink)}
+  .decision b{color:var(--accent);font-weight:700}.decision .save{color:var(--good);font-weight:700}.decision .hot{color:var(--bad);font-weight:700}
+  .barnote{font-size:12px;color:var(--ink-dim);margin:0 0 9px}.barnote b{color:var(--good);font-weight:600}.barnote b.bad{color:var(--bad)}
   .step{position:relative;padding:0 0 18px 26px}
   .step::before{content:"";position:absolute;left:6px;top:16px;bottom:0;width:1px;background:var(--line-strong)}
-  .step:last-child{padding-bottom:0}
-  .step:last-child::before{display:none}
+  .step:last-child{padding-bottom:0}.step:last-child::before{display:none}
   .step .dot{position:absolute;left:0;top:3px;width:13px;height:13px;border-radius:50%;background:var(--accent)}
+  .step.hot .dot{background:var(--bad)}.step.good .dot{background:var(--good)}
   .step h4{font-size:13.5px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
-  .step p{font-size:12.5px;color:var(--ink-dim);margin:0;line-height:1.55}
+  .step p{font-size:12.5px;color:var(--ink-dim);margin:0;line-height:1.55}.step p b{color:var(--ink)}
   .step .how{color:var(--accent-2);font-weight:600}
   .options{margin:10px 0 2px;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--surface)}
   .opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;font-size:12.5px}
   .opt + .opt{border-top:1px solid var(--line)}
   .opt.win{background:color-mix(in oklch,var(--good) 7%,var(--surface))}
+  .opt.miss{background:color-mix(in oklch,var(--bad) 6%,var(--surface))}
   .opt .m{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink)}
+  .opt.win .m::after{content:"← routed";margin-left:8px;font-family:var(--sans);font-size:10px;font-weight:700;color:var(--good);letter-spacing:.02em}
   .opt .r{display:flex;align-items:center;gap:10px}
   .opt .c{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-dim);font-weight:500}
   .opt .verdict{font-size:11px;font-weight:600;color:var(--ink-faint)}
-  .opt.win .verdict{color:var(--good)}
-  .opt.win .m::after{content:"← routed";margin-left:8px;font-family:var(--sans);font-size:10px;font-weight:700;color:var(--good);letter-spacing:.02em}
-
-  .decision{background:var(--surface-2);background:color-mix(in oklch,var(--accent) 6%,var(--surface));
-    border:1px solid var(--line-strong);border:1px solid color-mix(in oklch,var(--accent) 22%,var(--line));
-    border-radius:12px;padding:12px 14px;margin:0 0 18px;font-size:13px;line-height:1.55;color:var(--ink)}
-  .decision b{color:var(--accent);font-weight:700}
-  .decision .save{color:var(--good)}
-  .barnote{font-size:12px;color:var(--ink-dim);margin:0 0 9px}
-  .barnote b{color:var(--good);font-weight:600}
-
-  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:15px;
-    font-size:13px;font-weight:600;border:1px solid var(--accent);font-family:var(--sans);
-    transition:background .2s var(--e-quint),transform .12s var(--e-quint)}
-  .cta.solid{background:var(--accent);color:#fff}
-  .cta.ghost{background:transparent;color:var(--accent)}
+  .opt.win .verdict{color:var(--good)}.opt.miss .verdict{color:var(--bad)}
+  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:15px;font-size:13px;font-weight:600;border:1px solid var(--accent);font-family:var(--sans);transition:background .2s var(--e-quint),transform .12s var(--e-quint)}
+  .cta.solid{background:var(--accent);color:#fff}.cta.ghost{background:transparent;color:var(--accent)}
   .cta:active{transform:scale(.985)}
-  .foot{color:var(--ink-faint);font-size:11.5px;text-align:center;margin-top:20px}
+  .foot{color:var(--ink-faint);font-size:11.5px;text-align:center;margin-top:20px;line-height:1.5}
   .restart{display:block;margin:14px auto 0;border:0;background:none;color:var(--accent);font-weight:600;font-size:12px;padding:10px;font-family:var(--sans)}
-
   @media (prefers-reduced-motion: reduce){
     #scene0{transition:none}.caret.blink{animation:none}
-    .level.show > .stagger{opacity:1;transform:none;animation:none}
-    .link-rail .bead{animation:none;opacity:.4;transform:translateY(8px)}
+    .level.show > .stagger{opacity:1;transform:none;animation:none}.link-rail .bead{animation:none;opacity:.4;transform:translateY(8px)}
   }
 </style>
 </head>
 <body>
 
-<!-- ============ SCENE 0 ============ -->
 <section id="scene0">
   <div class="hero">
     <div class="h-eyebrow">Spend protection &middot; by Visa</div>
@@ -208,94 +165,60 @@
   </div>
 </section>
 
-<!-- ============ APP ============ -->
 <div id="app"><div class="wrap">
   <div class="eyebrow">Visa &middot; agent spend protection</div>
   <h1 id="title">How it works</h1>
   <p class="lede" id="lede">You just ran a protected task. Here is how it works &mdash; tap any step to go deeper.</p>
   <div class="crumbs" id="crumbs"><span class="crumb on">How it works</span></div>
 
-  <!-- LEVEL 1 -->
   <section class="level show" id="level1">
-    <div class="node lead stagger" data-go="2">
-      <div class="top"><span class="num">1</span><h3>You ask</h3><span class="more">&rarr;</span></div>
-      <p>The price and <span class="protected">Protected by</span> <span class="visa">VISA</span> appear right before you hit enter. No surprises.</p>
-    </div>
+    <div class="node lead stagger" data-go="2"><div class="top"><span class="num">1</span><h3>You ask</h3><span class="more">&rarr;</span></div>
+      <p>The price and <span class="protected">Protected by</span> <span class="visa">VISA</span> appear right before you hit enter. No surprises.</p></div>
     <div class="link-rail d1"><span class="bead"></span></div>
-    <div class="node stagger" data-go="2">
-      <div class="top"><span class="num">2</span><h3>We price it and protect it</h3><span class="more">&rarr;</span></div>
-      <p>An up-front estimate, then a guarantee. You are never billed more than you were shown.</p>
-    </div>
+    <div class="node stagger" data-go="2"><div class="top"><span class="num">2</span><h3>We price it and protect it</h3><span class="more">&rarr;</span></div>
+      <p>An up-front estimate, then a guarantee. You are never billed more than you were shown.</p></div>
     <div class="link-rail d2"><span class="bead"></span></div>
-    <div class="node stagger" data-go="2">
-      <div class="top"><span class="num">3</span><h3>We pick the right model</h3><span class="more">&rarr;</span></div>
-      <p>The cheapest model that still does the job well for this kind of task. Not the most expensive by default.</p>
-    </div>
+    <div class="node stagger" data-go="2"><div class="top"><span class="num">3</span><h3>We pick the right model</h3><span class="more">&rarr;</span></div>
+      <p>The cheapest model that still clears the quality bar &mdash; and not always the expensive one.</p></div>
     <div class="link-rail d3"><span class="bead"></span></div>
-    <div class="node stagger" data-go="2">
-      <div class="top"><span class="num">4</span><h3>It runs &mdash; you see the result</h3><span class="more">&rarr;</span></div>
-      <p>What it cost, what it would have cost, and that it actually worked.</p>
-    </div>
+    <div class="node stagger" data-go="2"><div class="top"><span class="num">4</span><h3>It runs &mdash; you see the result</h3><span class="more">&rarr;</span></div>
+      <p>What it cost, what it would have cost, and that it actually worked.</p></div>
     <div class="link-rail d4"><span class="bead"></span></div>
-    <div class="node stagger" data-go="2">
-      <div class="top"><span class="num">5</span><h3>It gets smarter</h3><span class="more">&rarr;</span></div>
-      <p>Every task teaches the system the cheapest way to get things right &mdash; so your costs keep falling.</p>
-    </div>
+    <div class="node stagger" data-go="2"><div class="top"><span class="num">5</span><h3>It gets smarter</h3><span class="more">&rarr;</span></div>
+      <p>Every task teaches the system the cheapest way to get things right &mdash; so your costs keep falling.</p></div>
     <div class="loop stagger"><span class="g">&#8635;</span> the savings compound every cycle</div>
   </section>
 
-  <!-- LEVEL 2 -->
   <section class="level" id="level2">
     <p class="taskline stagger" id="task2"></p>
-    <div class="tiles stagger">
-      <div class="tile"><div class="v accent" id="t2cost">$0.002</div><div class="l">actual cost, this run</div></div>
-      <div class="tile"><div class="v" id="t2idiot">14&times;</div><div class="l">cheaper than the default model</div></div>
-      <div class="tile"><div class="v good" id="t2band">~$0.01</div><div class="l">guaranteed max &mdash; came in under</div></div>
-    </div>
-    <div class="say stagger">
-      <p id="t2say"></p>
-      <p>You stayed protected the whole time &mdash; the most this task could cost you was set before it ran.</p>
-    </div>
+    <div class="tiles stagger" id="tiles2"></div>
+    <div class="say stagger"><p id="t2say"></p>
+      <p>You stayed protected the whole time &mdash; the most this task could cost you was set before it ran.</p></div>
     <button class="cta solid stagger" data-go="3">See how it was routed &rarr;</button>
   </section>
 
-  <!-- LEVEL 3 -->
   <section class="level" id="level3">
-    <div class="echo stagger">
-      <div><span class="p">&gt;</span> <span id="task3"></span></div>
-      <div class="row2"><span class="p">protected by</span> <span class="v">VISA</span> &middot; est. <span id="echoband">~$0.01</span></div>
-    </div>
+    <div class="echo stagger"><div><span class="p">&gt;</span> <span id="task3"></span></div>
+      <div class="row2"><span class="p">protected by</span> <span class="v">VISA</span> &middot; est. <span id="echoband">~$0.01</span></div></div>
     <div class="decision stagger" id="decision"></div>
-    <div class="stagger">
-      <div class="step"><span class="dot"></span><h4>Understood the task</h4>
-        <p>Recognized what kind of task it was. <span class="how">How it knew:</span> it read the shape of your request &mdash; no expensive model needed just to decide.</p></div>
-      <div class="step"><span class="dot"></span><h4>Compared the options against the quality bar</h4>
-        <p class="barnote">All three clear the <b>quality bar</b> for this job &mdash; they only differ on price. The router picks the cheapest that still clears it.</p>
-        <div class="options" id="opts"></div></div>
-      <div class="step"><span class="dot"></span><h4>Routed to the cheapest that clears the bar</h4>
-        <p id="t3choose"></p></div>
-      <div class="step"><span class="dot"></span><h4>Checked it and settled under guarantee</h4>
-        <p id="t3settle"></p></div>
-      <div class="step"><span class="dot"></span><h4>It gets cheaper from here</h4>
-        <p>As better, cheaper models arrive, the bar stays fixed but the floor drops &mdash; we re-route automatically, so the same task costs less next month with no change from you.</p></div>
-    </div>
+    <div class="stagger" id="steps3"></div>
     <button class="cta ghost stagger" data-go="2" style="margin-top:18px">&larr; Back to the task</button>
   </section>
 
-  <p class="foot">Real figures from a live run &middot; 24 workflows across the six common agent patterns &middot; cheap model vs gpt-4o / gpt-5.5 &middot; <span class="protected">Protected by</span> <span class="visa">VISA</span></p>
+  <p class="foot">Real figures from a live run &middot; 24 workflows + a 9-task capability matrix &middot; gpt-4o-mini vs gpt-4o / gpt-5.5 &middot; <span class="protected">Protected by</span> <span class="visa">VISA</span></p>
   <button class="restart" id="restart">&#8635; replay from the prompt</button>
 </div></div>
 
 <script>
 (function(){
-  // The six common agent patterns — REAL figures from the live run (gpt-4o-mini vs gpt-4o / gpt-5.5)
+  // REAL figures. types: save (route down), quality (bar rules out the pricey model), hot (ran hot, guarantee held)
   var PATTERNS=[
-    {t:"Route & answer a support message",     band:"~$0.001", cost:"$0.0004", mid:"$0.007", front:"$0.009", iMid:"16×", iFront:"23×", saved:"$0.006"},
-    {t:"Research options & recommend one",     band:"~$0.01",  cost:"$0.002",  mid:"$0.033", front:"$0.087", iMid:"14×", iFront:"38×", saved:"$0.031"},
-    {t:"Draft a policy & check for loopholes", band:"~$0.01",  cost:"$0.003",  mid:"$0.032", front:"$0.063", iMid:"12×", iFront:"24×", saved:"$0.029"},
-    {t:"Brainstorm names & pick the best",     band:"~$0.01",  cost:"$0.002",  mid:"$0.028", front:"$0.050", iMid:"15×", iFront:"27×", saved:"$0.026"},
-    {t:"Compare drafts & choose a winner",     band:"~$0.01",  cost:"$0.003",  mid:"$0.046", front:"$0.106", iMid:"14×", iFront:"33×", saved:"$0.043"},
-    {t:"Work through a list until done",       band:"~$0.01",  cost:"$0.0003", mid:"$0.004", front:"$0.100", iMid:"15×", iFront:"355×", saved:"$0.004"}
+    {type:'save',t:"Route & answer a support message",     band:"~$0.001",cost:"$0.0004",mid:"$0.007",front:"$0.009",iMid:"16×",iFront:"23×",saved:"$0.006"},
+    {type:'save',t:"Research options & recommend one",     band:"~$0.01", cost:"$0.002", mid:"$0.033",front:"$0.087",iMid:"14×",iFront:"38×",saved:"$0.031"},
+    {type:'quality',t:"Summarize a passage, keep it faithful", band:"~$0.001",cost:"$0.00003",mid:"$0.0005",front:"$0.0004",iMid:"15×"},
+    {type:'save',t:"Brainstorm names & pick the best",     band:"~$0.01", cost:"$0.002", mid:"$0.028",front:"$0.050",iMid:"15×",iFront:"27×",saved:"$0.026"},
+    {type:'save',t:"Compare drafts & choose a winner",     band:"~$0.01", cost:"$0.003", mid:"$0.046",front:"$0.106",iMid:"14×",iFront:"33×",saved:"$0.043"},
+    {type:'hot', t:"Work through a list until done",       band:"~$0.01", shown:"~$0.01",ran:"$0.18",cap:"$0.21",mult:"18×",calls:14}
   ];
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ptext=document.getElementById('ptext'),caption=document.getElementById('caption'),est=document.getElementById('est'),
@@ -304,37 +227,65 @@
   var timers=[],entered=false,cur=0,curP=PATTERNS[0];
   function clr(){timers.forEach(clearTimeout);timers=[]}
   function at(ms,fn){timers.push(setTimeout(fn,ms))}
+  function tile(v,l,cls){return '<div class="tile"><div class="v '+(cls||'')+'">'+v+'</div><div class="l">'+l+'</div></div>'}
+  function opt(m,c,verdict,cls){return '<div class="opt '+(cls||'')+'"><span class="m">'+m+'</span><span class="r"><span class="c">'+c+'</span><span class="verdict">'+verdict+'</span></span></div>'}
+  function step(h,p,cls){return '<div class="step '+(cls||'')+'"><span class="dot"></span><h4>'+h+'</h4><p>'+p+'</p></div>'}
 
-  // ---------- render a pattern's real numbers into the drill-down ----------
   function renderTask(P){
     document.getElementById('task2').innerHTML='<span class="q">“</span>'+P.t+'<span class="q">”</span>';
-    document.getElementById('t2cost').textContent=P.cost;
-    document.getElementById('t2idiot').innerHTML=P.iMid;
-    document.getElementById('t2band').textContent=P.band;
-    document.getElementById('t2say').innerHTML='You were shown <b>'+P.band+'</b> before it ran, and it came in at <b>'+P.cost+'</b>. We compared a few models and used the cheapest one that did the job — about <b>'+P.iMid+'</b> cheaper than reaching for the default.';
-    document.getElementById('task3').textContent=P.t;
+    document.getElementById('task3').textContent=P.t+(P.type==='hot'?'   (a reasoning model)':'');
     document.getElementById('echoband').textContent=P.band;
-    document.getElementById('decision').innerHTML='Routed to <b>gpt-4o-mini</b>, the cheapest model that clears the bar. The default (gpt-4o) clears the same bar but costs <b>'+P.iMid+'</b> more — so you <span class="save">saved '+P.saved+'</span> on this one task.';
-    document.getElementById('opts').innerHTML=
-      '<div class="opt win"><span class="m">gpt-4o-mini</span><span class="r"><span class="c">'+P.cost+'</span><span class="verdict">clears the bar</span></span></div>'+
-      '<div class="opt"><span class="m">gpt-4o</span><span class="r"><span class="c">'+P.mid+'</span><span class="verdict">'+P.iMid+' the cost</span></span></div>'+
-      '<div class="opt"><span class="m">gpt-5.5</span><span class="r"><span class="c">'+P.front+'</span><span class="verdict">'+P.iFront+' the cost</span></span></div>';
-    document.getElementById('t3choose').innerHTML='All three would have worked, so price decides. Reaching for the default would have cost <b>'+P.iMid+'</b> more for the same result.';
-    document.getElementById('t3settle').innerHTML='Confirmed it completed, and the final cost landed at <b>'+P.cost+'</b> — under your '+P.band+' guarantee. You are never billed above the number you saw.';
+    var tiles=document.getElementById('tiles2'),say=document.getElementById('t2say'),
+        dec=document.getElementById('decision'),steps=document.getElementById('steps3');
+
+    if(P.type==='save'){
+      tiles.innerHTML=tile(P.cost,'actual cost, this run','accent')+tile(P.iMid,'cheaper than the default')+tile(P.band,'guaranteed max — came in under','good');
+      say.innerHTML='You were shown <b>'+P.band+'</b> before it ran, and it came in at <b>'+P.cost+'</b>. We compared a few models and used the cheapest one that cleared the quality bar — about <b>'+P.iMid+'</b> cheaper than reaching for the default.';
+      dec.innerHTML='Routed to <b>gpt-4o-mini</b>, the cheapest model that clears the bar. The default (gpt-4o) clears the same bar but costs <b>'+P.iMid+'</b> more — so you <span class="save">saved '+P.saved+'</span> on this one task.';
+      steps.innerHTML=
+        step('Understood the task','Recognized what kind of task it was. <span class="how">How it knew:</span> it read the shape of your request — no expensive model needed just to decide.')+
+        '<div class="step"><span class="dot"></span><h4>Compared the options against the quality bar</h4>'+
+          '<p class="barnote">All three clear the <b>quality bar</b> for this job — they differ only on price.</p>'+
+          '<div class="options">'+opt('gpt-4o-mini',P.cost,'clears the bar','win')+opt('gpt-4o',P.mid,P.iMid+' the cost')+opt('gpt-5.5',P.front,P.iFront+' the cost')+'</div></div>'+
+        step('Routed to the cheapest that clears the bar','All three would have worked, so price decides. Reaching for the default would have cost <b>'+P.iMid+'</b> more for the same result.')+
+        step('Checked it and settled under guarantee','Final cost landed at <b>'+P.cost+'</b> — under your '+P.band+' guarantee. You are never billed above the number you saw.','good')+
+        step('It gets cheaper from here','As better, cheaper models arrive, the bar stays fixed but the floor drops — we re-route automatically, so the same task costs less next month.');
+    }
+    else if(P.type==='quality'){
+      tiles.innerHTML=tile(P.iMid,'cheaper than the default')+tile('✗','the default model failed the bar','bad')+tile('✓','the cheap one was better','good');
+      say.innerHTML='Here the expensive default (gpt-4o) actually <b>failed</b> the quality check — its summary drifted from the source. gpt-4o-mini passed. We routed to the cheaper model <b>because it was the better answer</b>, not just the cheaper one.';
+      dec.innerHTML='The <b>quality bar</b> caught the expensive model: <span class="hot">gpt-4o missed it</span>, gpt-4o-mini cleared it. Routed to the cheaper, better one — <span class="save">'+P.iMid+' cheaper</span> and correct.';
+      steps.innerHTML=
+        step('Understood the task','Recognized it as a summary that has to stay faithful to the source.')+
+        '<div class="step"><span class="dot"></span><h4>Checked each model against the quality bar</h4>'+
+          '<p class="barnote">This time the bar does the deciding — and it <b class="bad">rules out</b> the expensive model.</p>'+
+          '<div class="options">'+opt('gpt-4o-mini',P.cost,'clears the bar','win')+opt('gpt-4o',P.mid,'misses the bar','miss')+opt('gpt-5.5',P.front,'clears, pricier')+'</div></div>'+
+        step('The default missed the bar','On this real job gpt-4o produced a worse summary than gpt-4o-mini. Paying more was not just wasteful — it was worse.','hot')+
+        step('Routed to the cheaper, correct one','You got the right answer and the lowest price at once. The bar protects your <b>quality</b>, not only your wallet.','good')+
+        step('This is why we measure, not assume','Nobody can guess this from a price list. We re-test every model against the bar, so "more expensive" never gets mistaken for "better".');
+    }
+    else { // hot
+      tiles.innerHTML=tile(P.shown,'price you were shown','accent')+tile(P.ran,'what it really ran to ('+P.mult+')','bad')+tile(P.cap,'your guaranteed cap — under it','good');
+      say.innerHTML='This is the runaway case. On a reasoning model the task burned hidden “thinking” over <b>'+P.calls+' steps</b>, and the real cost hit <b>'+P.ran+'</b> — about <b>'+P.mult+'</b> the price you were shown.';
+      dec.innerHTML='Predicted <b>'+P.shown+'</b>, ran hot to <span class="hot">'+P.ran+'</span> on hidden reasoning. Capped at your <b>'+P.cap+'</b> guarantee — it came in under, and the overrun risk was <span class="save">ours, not yours</span>.';
+      steps.innerHTML=
+        step('You were shown a price, and protected','Before anything ran you saw <b>'+P.shown+'</b> and a guaranteed ceiling of <b>'+P.cap+'</b>.')+
+        step('It ran hot','A reasoning model decided to keep working — '+P.calls+' steps and a burst of hidden “thinking” tokens you never see. The real cost climbed to <b>'+P.ran+'</b>, '+P.mult+' the shown price.','hot')+
+        step('The guarantee capped it','Your exposure stayed pinned to the <b>'+P.cap+'</b> ceiling. It came in under, so you paid the real cost — but never more than you agreed.','good')+
+        '<div class="step good"><span class="dot"></span><h4>Predicted vs actual vs your cap</h4>'+
+          '<div class="options">'+opt('shown to you',P.shown,'the estimate','')+opt('actually cost',P.ran,P.mult+' — hidden reasoning','miss')+opt('your guarantee',P.cap,'never billed above','win')+'</div></div>'+
+        step('This is the $1,000 surprise — defused','Runaway agents are exactly how a task quietly burns a fortune. The guarantee is why it cannot happen to you.','good');
+    }
   }
 
-  // ---------- drill-down nav ----------
-  var TITLES={
-    1:['How it works','You just ran a protected task. Here is how it works — tap any step to go deeper.'],
-    2:['What this task accomplished','A real run, in plain terms — what it cost, and what it saved you.'],
-    3:['How it was routed','The same task, one level deeper — how it chose, and how it knew.']
-  };
+  var TITLES={1:['How it works','You just ran a protected task. Here is how it works — tap any step to go deeper.'],
+    2:['What this task accomplished','A real run, in plain terms — what it cost, and how you were protected.'],
+    3:['How it was routed','The same task, one level deeper — the decision, the quality bar, and the guarantee.']};
   var CRUMBS={1:[['How it works',1]],2:[['How it works',1],['The task',2]],3:[['How it works',1],['The task',2],['Routing',3]]};
   function go(n){
     [1,2,3].forEach(function(i){document.getElementById('level'+i).classList.toggle('show',i===n)});
     var on=document.getElementById('level'+n);void on.offsetWidth;
-    document.getElementById('title').textContent=TITLES[n][0];
-    document.getElementById('lede').textContent=TITLES[n][1];
+    document.getElementById('title').textContent=TITLES[n][0];document.getElementById('lede').textContent=TITLES[n][1];
     var cb=document.getElementById('crumbs');cb.innerHTML='';
     CRUMBS[n].forEach(function(c,idx){
       if(idx)cb.insertAdjacentHTML('beforeend','<span class="sepc">&rsaquo;</span>');
@@ -343,48 +294,32 @@
     });
     window.scrollTo({top:0,behavior:'smooth'});
   }
+  function enterApp(){if(entered)return;entered=true;clr();renderTask(curP);scene0.classList.add('out');
+    at(reduce?0:480,function(){scene0.style.display='none';app.style.display='block';go(1);window.scrollTo({top:0})})}
 
-  // ---------- enter the app ----------
-  function enterApp(){
-    if(entered)return;entered=true;clr();
-    renderTask(curP);
-    scene0.classList.add('out');
-    at(reduce?0:480,function(){scene0.style.display='none';app.style.display='block';go(1);window.scrollTo({top:0})});
-  }
-
-  // ---------- single delegated handler (robust on touch) ----------
-  function handle(e){
-    var en=e.target.closest('[data-enter]'); if(en){enterApp();return;}
-    var g=e.target.closest('[data-go]'); if(g){go(parseInt(g.getAttribute('data-go'),10));}
-  }
+  function handle(e){var en=e.target.closest('[data-enter]');if(en){enterApp();return;}
+    var g=e.target.closest('[data-go]');if(g){go(parseInt(g.getAttribute('data-go'),10));}}
   document.addEventListener('click',handle);
-  document.addEventListener('keydown',function(e){
-    if(e.key==='Enter'||e.key===' '){ if(!entered){enterApp();} }
-  });
+  document.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&!entered)enterApp()});
   document.getElementById('restart').addEventListener('click',function(e){
     e.stopPropagation();entered=false;app.style.display='none';scene0.style.display='flex';scene0.classList.remove('out');
     cur=0;curP=PATTERNS[0];prompt.classList.remove('focus','fire');caption.classList.remove('show');
     ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';hint.style.opacity='1';
-    window.scrollTo({top:0});loop();
-  });
+    window.scrollTo({top:0});loop();});
 
-  // ---------- scene 0 prompt loop ----------
   function loop(){
     if(entered)return;clr();
     var P=PATTERNS[cur%PATTERNS.length];curP=P;
     caption.classList.remove('show');prompt.classList.remove('focus','fire');
     ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';
-    if(reduce){
-      ptext.classList.remove('empty');ptext.innerHTML=P.t+'<span class="caret blink"></span>';
-      est.innerHTML='<span class="pre">est.</span> '+P.band;caption.classList.add('show');prompt.classList.add('focus');return;
-    }
+    if(reduce){ptext.classList.remove('empty');ptext.innerHTML=P.t+'<span class="caret blink"></span>';
+      est.innerHTML='<span class="pre">est.</span> '+P.band;caption.classList.add('show');prompt.classList.add('focus');return;}
     at(220,function(){prompt.classList.add('focus');ptext.classList.remove('empty');ptext.innerHTML='<span class="caret blink"></span>'});
     var start=460,per=40,t=P.t;
     for(var c=0;c<=t.length;c++){(function(c){at(start+c*per,function(){ptext.innerHTML=t.slice(0,c)+'<span class="caret"></span>'})})(c)}
     var typed=start+t.length*per;
     at(typed+340,function(){est.innerHTML='<span class="pre">est.</span> '+P.band;caption.classList.add('show');ptext.innerHTML=t+'<span class="caret blink"></span>'});
-    at(typed+360,function(){send.classList.add('press')});
-    at(typed+520,function(){send.classList.remove('press')});
+    at(typed+360,function(){send.classList.add('press')});at(typed+520,function(){send.classList.remove('press')});
     at(typed+2400,function(){cur++;loop()});
   }
   loop();
