@@ -162,6 +162,15 @@
   .opt .c{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-dim);font-weight:500}
   .opt .verdict{font-size:11px;font-weight:600;color:var(--ink-faint)}
   .opt.win .verdict{color:var(--good)}
+  .opt.win .m::after{content:"← routed";margin-left:8px;font-family:var(--sans);font-size:10px;font-weight:700;color:var(--good);letter-spacing:.02em}
+
+  .decision{background:var(--surface-2);background:color-mix(in oklch,var(--accent) 6%,var(--surface));
+    border:1px solid var(--line-strong);border:1px solid color-mix(in oklch,var(--accent) 22%,var(--line));
+    border-radius:12px;padding:12px 14px;margin:0 0 18px;font-size:13px;line-height:1.55;color:var(--ink)}
+  .decision b{color:var(--accent);font-weight:700}
+  .decision .save{color:var(--good)}
+  .barnote{font-size:12px;color:var(--ink-dim);margin:0 0 9px}
+  .barnote b{color:var(--good);font-weight:600}
 
   .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:15px;
     font-size:13px;font-weight:600;border:1px solid var(--accent);font-family:var(--sans);
@@ -237,15 +246,15 @@
 
   <!-- LEVEL 2 -->
   <section class="level" id="level2">
-    <p class="taskline stagger" id="task2"><span class="q">&ldquo;</span>plan a 3-day trip to Lisbon<span class="q">&rdquo;</span></p>
+    <p class="taskline stagger" id="task2"></p>
     <div class="tiles stagger">
-      <div class="tile"><div class="v accent">~$0.01</div><div class="l">protected price, came in under</div></div>
-      <div class="tile"><div class="v">23&times;</div><div class="l">cheaper than the default model</div></div>
-      <div class="tile"><div class="v good">great</div><div class="l">answer was complete and correct</div></div>
+      <div class="tile"><div class="v accent" id="t2cost">$0.002</div><div class="l">actual cost, this run</div></div>
+      <div class="tile"><div class="v" id="t2idiot">14&times;</div><div class="l">cheaper than the default model</div></div>
+      <div class="tile"><div class="v good" id="t2band">~$0.01</div><div class="l">guaranteed max &mdash; came in under</div></div>
     </div>
     <div class="say stagger">
-      <p>We compared a few models, used the cheapest one that still gave you a great answer, and finished under the guaranteed price.</p>
-      <p>You stayed protected the whole time &mdash; the most a task like this could ever cost you was set before it ran.</p>
+      <p id="t2say"></p>
+      <p>You stayed protected the whole time &mdash; the most this task could cost you was set before it ran.</p>
     </div>
     <button class="cta solid stagger" data-go="3">See how it was routed &rarr;</button>
   </section>
@@ -253,46 +262,66 @@
   <!-- LEVEL 3 -->
   <section class="level" id="level3">
     <div class="echo stagger">
-      <div><span class="p">&gt;</span> <span id="task3">plan a 3-day trip to Lisbon</span></div>
-      <div class="row2"><span class="p">protected by</span> <span class="v">VISA</span> &middot; est. ~$0.01</div>
+      <div><span class="p">&gt;</span> <span id="task3"></span></div>
+      <div class="row2"><span class="p">protected by</span> <span class="v">VISA</span> &middot; est. <span id="echoband">~$0.01</span></div>
     </div>
+    <div class="decision stagger" id="decision"></div>
     <div class="stagger">
       <div class="step"><span class="dot"></span><h4>Understood the task</h4>
         <p>Recognized what kind of task it was. <span class="how">How it knew:</span> it read the shape of your request &mdash; no expensive model needed just to decide.</p></div>
-      <div class="step"><span class="dot"></span><h4>Compared the options</h4>
-        <p>We keep a constantly-updated read of which models are good enough for which work.</p>
-        <div class="options">
-          <div class="opt win"><span class="m">small model</span><span class="r"><span class="c">~$0.006</span><span class="verdict">does the job</span></span></div>
-          <div class="opt"><span class="m">mid model</span><span class="r"><span class="c">~$0.14</span><span class="verdict">overkill</span></span></div>
-          <div class="opt"><span class="m">frontier model</span><span class="r"><span class="c">~$0.40</span><span class="verdict">overkill</span></span></div>
-        </div></div>
-      <div class="step"><span class="dot"></span><h4>Chose the cheapest that&rsquo;s good enough</h4>
-        <p>Picked the small model. Going pricier would have cost 23&times; more for the same great result.</p></div>
-      <div class="step"><span class="dot"></span><h4>Checked it and settled</h4>
-        <p>Confirmed the answer was complete and correct, and the final cost landed at <b>$0.006</b> &mdash; under your guarantee.</p></div>
+      <div class="step"><span class="dot"></span><h4>Compared the options against the quality bar</h4>
+        <p class="barnote">All three clear the <b>quality bar</b> for this job &mdash; they only differ on price. The router picks the cheapest that still clears it.</p>
+        <div class="options" id="opts"></div></div>
+      <div class="step"><span class="dot"></span><h4>Routed to the cheapest that clears the bar</h4>
+        <p id="t3choose"></p></div>
+      <div class="step"><span class="dot"></span><h4>Checked it and settled under guarantee</h4>
+        <p id="t3settle"></p></div>
+      <div class="step"><span class="dot"></span><h4>It gets cheaper from here</h4>
+        <p>As better, cheaper models arrive, the bar stays fixed but the floor drops &mdash; we re-route automatically, so the same task costs less next month with no change from you.</p></div>
     </div>
     <button class="cta ghost stagger" data-go="2" style="margin-top:18px">&larr; Back to the task</button>
   </section>
 
-  <p class="foot">Concept demo &middot; figures illustrative &middot; <span class="protected">Protected by</span> <span class="visa">VISA</span></p>
+  <p class="foot">Real figures from a live run &middot; 24 workflows across the six common agent patterns &middot; cheap model vs gpt-4o / gpt-5.5 &middot; <span class="protected">Protected by</span> <span class="visa">VISA</span></p>
   <button class="restart" id="restart">&#8635; replay from the prompt</button>
 </div></div>
 
 <script>
 (function(){
-  var PROMPTS=[
-    {t:"plan a 3-day trip to Lisbon",            amt:"~$0.01"},
-    {t:"summarize this report and flag the risks", amt:"~$0.10"},
-    {t:"what's a good gift for a 5-year-old?",   amt:"~$0.001"},
-    {t:"find the cheapest flights to New York",  amt:"~$0.10"}
+  // The six common agent patterns — REAL figures from the live run (gpt-4o-mini vs gpt-4o / gpt-5.5)
+  var PATTERNS=[
+    {t:"Route & answer a support message",     band:"~$0.001", cost:"$0.0004", mid:"$0.007", front:"$0.009", iMid:"16×", iFront:"23×", saved:"$0.006"},
+    {t:"Research options & recommend one",     band:"~$0.01",  cost:"$0.002",  mid:"$0.033", front:"$0.087", iMid:"14×", iFront:"38×", saved:"$0.031"},
+    {t:"Draft a policy & check for loopholes", band:"~$0.01",  cost:"$0.003",  mid:"$0.032", front:"$0.063", iMid:"12×", iFront:"24×", saved:"$0.029"},
+    {t:"Brainstorm names & pick the best",     band:"~$0.01",  cost:"$0.002",  mid:"$0.028", front:"$0.050", iMid:"15×", iFront:"27×", saved:"$0.026"},
+    {t:"Compare drafts & choose a winner",     band:"~$0.01",  cost:"$0.003",  mid:"$0.046", front:"$0.106", iMid:"14×", iFront:"33×", saved:"$0.043"},
+    {t:"Work through a list until done",       band:"~$0.01",  cost:"$0.0003", mid:"$0.004", front:"$0.100", iMid:"15×", iFront:"355×", saved:"$0.004"}
   ];
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ptext=document.getElementById('ptext'),caption=document.getElementById('caption'),est=document.getElementById('est'),
       prompt=document.getElementById('prompt'),send=document.getElementById('send'),hint=document.getElementById('hint'),
       scene0=document.getElementById('scene0'),app=document.getElementById('app');
-  var timers=[],entered=false,cur=0,curTask=PROMPTS[0].t;
+  var timers=[],entered=false,cur=0,curP=PATTERNS[0];
   function clr(){timers.forEach(clearTimeout);timers=[]}
   function at(ms,fn){timers.push(setTimeout(fn,ms))}
+
+  // ---------- render a pattern's real numbers into the drill-down ----------
+  function renderTask(P){
+    document.getElementById('task2').innerHTML='<span class="q">“</span>'+P.t+'<span class="q">”</span>';
+    document.getElementById('t2cost').textContent=P.cost;
+    document.getElementById('t2idiot').innerHTML=P.iMid;
+    document.getElementById('t2band').textContent=P.band;
+    document.getElementById('t2say').innerHTML='You were shown <b>'+P.band+'</b> before it ran, and it came in at <b>'+P.cost+'</b>. We compared a few models and used the cheapest one that did the job — about <b>'+P.iMid+'</b> cheaper than reaching for the default.';
+    document.getElementById('task3').textContent=P.t;
+    document.getElementById('echoband').textContent=P.band;
+    document.getElementById('decision').innerHTML='Routed to <b>gpt-4o-mini</b>, the cheapest model that clears the bar. The default (gpt-4o) clears the same bar but costs <b>'+P.iMid+'</b> more — so you <span class="save">saved '+P.saved+'</span> on this one task.';
+    document.getElementById('opts').innerHTML=
+      '<div class="opt win"><span class="m">gpt-4o-mini</span><span class="r"><span class="c">'+P.cost+'</span><span class="verdict">clears the bar</span></span></div>'+
+      '<div class="opt"><span class="m">gpt-4o</span><span class="r"><span class="c">'+P.mid+'</span><span class="verdict">'+P.iMid+' the cost</span></span></div>'+
+      '<div class="opt"><span class="m">gpt-5.5</span><span class="r"><span class="c">'+P.front+'</span><span class="verdict">'+P.iFront+' the cost</span></span></div>';
+    document.getElementById('t3choose').innerHTML='All three would have worked, so price decides. Reaching for the default would have cost <b>'+P.iMid+'</b> more for the same result.';
+    document.getElementById('t3settle').innerHTML='Confirmed it completed, and the final cost landed at <b>'+P.cost+'</b> — under your '+P.band+' guarantee. You are never billed above the number you saw.';
+  }
 
   // ---------- drill-down nav ----------
   var TITLES={
@@ -318,8 +347,7 @@
   // ---------- enter the app ----------
   function enterApp(){
     if(entered)return;entered=true;clr();
-    document.getElementById('task2').innerHTML='<span class="q">“</span>'+curTask+'<span class="q">”</span>';
-    document.getElementById('task3').textContent=curTask;
+    renderTask(curP);
     scene0.classList.add('out');
     at(reduce?0:480,function(){scene0.style.display='none';app.style.display='block';go(1);window.scrollTo({top:0})});
   }
@@ -335,7 +363,7 @@
   });
   document.getElementById('restart').addEventListener('click',function(e){
     e.stopPropagation();entered=false;app.style.display='none';scene0.style.display='flex';scene0.classList.remove('out');
-    cur=0;curTask=PROMPTS[0].t;prompt.classList.remove('focus','fire');caption.classList.remove('show');
+    cur=0;curP=PATTERNS[0];prompt.classList.remove('focus','fire');caption.classList.remove('show');
     ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';hint.style.opacity='1';
     window.scrollTo({top:0});loop();
   });
@@ -343,18 +371,18 @@
   // ---------- scene 0 prompt loop ----------
   function loop(){
     if(entered)return;clr();
-    var P=PROMPTS[cur%PROMPTS.length];curTask=P.t;
+    var P=PATTERNS[cur%PATTERNS.length];curP=P;
     caption.classList.remove('show');prompt.classList.remove('focus','fire');
     ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';
     if(reduce){
       ptext.classList.remove('empty');ptext.innerHTML=P.t+'<span class="caret blink"></span>';
-      est.innerHTML='<span class="pre">est.</span> '+P.amt;caption.classList.add('show');prompt.classList.add('focus');return;
+      est.innerHTML='<span class="pre">est.</span> '+P.band;caption.classList.add('show');prompt.classList.add('focus');return;
     }
     at(220,function(){prompt.classList.add('focus');ptext.classList.remove('empty');ptext.innerHTML='<span class="caret blink"></span>'});
     var start=460,per=40,t=P.t;
     for(var c=0;c<=t.length;c++){(function(c){at(start+c*per,function(){ptext.innerHTML=t.slice(0,c)+'<span class="caret"></span>'})})(c)}
     var typed=start+t.length*per;
-    at(typed+340,function(){est.innerHTML='<span class="pre">est.</span> '+P.amt;caption.classList.add('show');ptext.innerHTML=t+'<span class="caret blink"></span>'});
+    at(typed+340,function(){est.innerHTML='<span class="pre">est.</span> '+P.band;caption.classList.add('show');ptext.innerHTML=t+'<span class="caret blink"></span>'});
     at(typed+360,function(){send.classList.add('press')});
     at(typed+520,function(){send.classList.remove('press')});
     at(typed+2400,function(){cur++;loop()});
