@@ -28,11 +28,20 @@
     --e-quint:cubic-bezier(.22,1,.36,1);
     --e-exit:cubic-bezier(.16,1,.3,1);
   }
+  /* hex fallbacks first for older devices, oklch overrides on supporting browsers */
+  @supports not (color: oklch(0 0 0)){
+    :root{
+      --accent:#1a1f71;--accent-2:#3742a8;--gold:#f7b600;--bg:#f3f5fa;--surface:#fafbfe;--surface-2:#eef1f8;
+      --ink:#1a1d28;--ink-dim:#5b6274;--ink-faint:#929ab0;--line:#e5e8f1;--line-strong:#d6dae7;
+      --good:#1a7a57;--dark:#0e1016;--ink-on-dark:#cbd0dd;
+    }
+  }
   *{box-sizing:border-box}
   html,body{margin:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
-    line-height:1.5;font-weight:400}
+    line-height:1.5;font-weight:400;-webkit-tap-highlight-color:transparent}
   .wrap{max-width:448px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 18px max(44px,env(safe-area-inset-bottom))}
+  [data-go],[data-enter]{cursor:pointer;touch-action:manipulation}
 
   .visa{font-weight:800;font-style:italic;color:var(--accent);position:relative;display:inline-block;line-height:1}
   .visa::after{content:"";position:absolute;right:-3px;top:-2px;width:6px;height:2.5px;background:var(--gold);border-radius:1px;transform:skewX(-12deg)}
@@ -55,7 +64,7 @@
   .caret.blink{animation:blink 1.05s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
   .send{flex:none;width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;
-    display:grid;place-items:center;font-size:16px;cursor:pointer;transition:transform .12s var(--e-quint),filter .12s}
+    display:grid;place-items:center;font-size:16px;transition:transform .12s var(--e-quint),filter .12s}
   .send.press{transform:scale(.9);filter:brightness(1.25)}
   .caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 8px 5px;
     opacity:0;transform:translateY(5px);transition:opacity .45s var(--e-quint),transform .45s var(--e-quint)}
@@ -64,7 +73,8 @@
   .visa.s{font-size:15px}
   .est{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
   .est .pre{color:var(--ink-dim)}
-  .hint{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;font-size:12px;color:var(--ink-faint);transition:opacity .2s}
+  .hint{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:22px;font-size:12.5px;color:var(--ink-faint);transition:opacity .2s}
+  .hint b{color:var(--accent);font-weight:600}
   .key{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border:1px solid var(--line-strong);
     border-bottom-width:2px;border-radius:6px;background:var(--surface);font-size:12px;color:var(--ink-dim);font-family:var(--mono);
     transition:transform .1s var(--e-quint),border-bottom-width .1s}
@@ -77,8 +87,8 @@
   .lede{color:var(--ink-dim);font-size:14px;margin:0 0 18px}
   .lede b{color:var(--ink);font-weight:600}
   .crumbs{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin:0 0 18px}
-  .crumb{color:var(--ink-faint);cursor:pointer;transition:color .2s var(--e-quint)}
-  .crumb.link:hover{color:var(--accent)}
+  .crumb{color:var(--ink-faint);transition:color .2s var(--e-quint)}
+  .crumb.link:active{color:var(--accent)}
   .crumb.on{color:var(--accent)}
   .sepc{color:var(--line-strong)}
 
@@ -96,24 +106,24 @@
   @keyframes rise{to{opacity:1;transform:none}}
 
   .node{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:14px 15px;
-    transition:border-color .22s var(--e-quint),transform .14s var(--e-quint),box-shadow .22s var(--e-quint)}
+    transition:border-color .18s var(--e-quint),transform .12s var(--e-quint),box-shadow .18s var(--e-quint)}
   .node .top{display:flex;align-items:center;gap:11px}
   .num{flex:none;width:22px;height:22px;border-radius:6px;background:var(--surface-2);color:var(--accent);
     font-family:var(--mono);font-size:11px;font-weight:500;display:grid;place-items:center}
   .node.lead .num{background:var(--accent);color:#fff}
   .node h3{font-size:14.5px;font-weight:600;margin:0;flex:1;letter-spacing:-.01em}
-  .node .more{font-size:11px;font-weight:600;color:var(--accent);white-space:nowrap;opacity:0;transform:translateX(-3px);transition:opacity .22s,transform .22s}
+  .node .more{font-size:14px;font-weight:600;color:var(--accent);white-space:nowrap}
   .node p{font-size:12.5px;color:var(--ink-dim);margin:8px 0 0;padding-left:33px}
-  .node.tap{cursor:pointer}
-  .node.tap:hover{border-color:var(--line-strong);transform:translateY(-1px);box-shadow:0 10px 24px -18px color-mix(in oklch,var(--ink) 55%,transparent)}
-  .node.tap:hover .more{opacity:1;transform:none}
-  .node.tap:active{transform:translateY(0) scale(.995)}
+  .node:active{border-color:var(--accent);transform:scale(.992)}
+  @media (hover:hover){
+    .node:hover{border-color:var(--line-strong);transform:translateY(-1px);box-shadow:0 10px 24px -18px rgba(20,22,30,.5)}
+  }
 
-  .link-rail{height:22px;margin-left:25px;position:relative}
+  .link-rail{height:20px;margin-left:25px;position:relative}
   .link-rail::before{content:"";position:absolute;left:0;top:-1px;bottom:-1px;width:1px;
     background:repeating-linear-gradient(var(--line-strong) 0 3px,transparent 3px 7px)}
   .link-rail .bead{position:absolute;left:-2px;top:0;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.5;animation:bead 3s linear infinite}
-  @keyframes bead{0%{transform:translateY(-3px);opacity:0}15%{opacity:.5}85%{opacity:.5}100%{transform:translateY(22px);opacity:0}}
+  @keyframes bead{0%{transform:translateY(-3px);opacity:0}15%{opacity:.5}85%{opacity:.5}100%{transform:translateY(20px);opacity:0}}
   .link-rail.d1 .bead{animation-delay:0s}.link-rail.d2 .bead{animation-delay:.5s}
   .link-rail.d3 .bead{animation-delay:1s}.link-rail.d4 .bead{animation-delay:1.5s}
   .loop{display:flex;align-items:center;gap:9px;margin:12px 2px 0;font-size:12px;color:var(--accent);font-weight:600}
@@ -123,7 +133,7 @@
   .taskline .q{color:var(--ink-dim);font-weight:400}
   .tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin:0 0 16px}
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 12px}
-  .tile .v{font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
+  .tile .v{font-family:var(--mono);font-size:18px;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
   .tile .v.accent{color:var(--accent)}
   .tile .v.good{color:var(--good)}
   .tile .l{font-size:11px;color:var(--ink-dim);margin-top:4px;line-height:1.3}
@@ -134,7 +144,7 @@
   .echo{background:var(--dark);border-radius:12px;padding:13px 14px;margin:0 0 18px;font-family:var(--mono);font-size:12.5px;color:var(--ink-on-dark)}
   .echo .p{color:var(--ink-faint)}
   .echo .row2{margin-top:8px;font-size:11.5px}
-  .echo .v{font-style:italic;font-weight:800;color:oklch(0.78 0.09 277)}
+  .echo .v{font-style:italic;font-weight:800;color:#aab2ff}
   .step{position:relative;padding:0 0 18px 26px}
   .step::before{content:"";position:absolute;left:6px;top:16px;bottom:0;width:1px;background:var(--line-strong)}
   .step:last-child{padding-bottom:0}
@@ -153,77 +163,73 @@
   .opt .verdict{font-size:11px;font-weight:600;color:var(--ink-faint)}
   .opt.win .verdict{color:var(--good)}
 
-  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:14px;
-    font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--accent);
+  .cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;padding:15px;
+    font-size:13px;font-weight:600;border:1px solid var(--accent);font-family:var(--sans);
     transition:background .2s var(--e-quint),transform .12s var(--e-quint)}
   .cta.solid{background:var(--accent);color:#fff}
   .cta.ghost{background:transparent;color:var(--accent)}
-  .cta.solid:hover{background:oklch(0.27 0.13 277)}
-  .cta.ghost:hover{background:var(--surface)}
   .cta:active{transform:scale(.985)}
   .foot{color:var(--ink-faint);font-size:11.5px;text-align:center;margin-top:20px}
-  .restart{display:block;margin:14px auto 0;border:0;background:none;color:var(--accent);font-weight:600;font-size:12px;cursor:pointer;padding:8px}
+  .restart{display:block;margin:14px auto 0;border:0;background:none;color:var(--accent);font-weight:600;font-size:12px;padding:10px;font-family:var(--sans)}
 
   @media (prefers-reduced-motion: reduce){
-    #scene0{transition:none}
-    .caret.blink{animation:none}
+    #scene0{transition:none}.caret.blink{animation:none}
     .level.show > .stagger{opacity:1;transform:none;animation:none}
-    .link-rail .bead{animation:none;opacity:.4;transform:translateY(9px)}
-    .node.tap:hover{transform:none}
+    .link-rail .bead{animation:none;opacity:.4;transform:translateY(8px)}
   }
 </style>
 </head>
 <body>
 
-<!-- ============ SCENE 0 — the prompt ============ -->
+<!-- ============ SCENE 0 ============ -->
 <section id="scene0">
   <div class="hero">
     <div class="h-eyebrow">Spend protection &middot; by Visa</div>
-    <div class="prompt" id="prompt">
+    <div class="prompt" id="prompt" data-enter role="button" tabindex="0" aria-label="run the task">
       <div class="prow">
         <div class="ptext empty" id="ptext">Ask anything<span class="caret blink"></span></div>
-        <div class="send" id="send" title="run">&#8629;</div>
+        <div class="send" id="send">&#8629;</div>
       </div>
       <div class="caption" id="caption">
         <span class="brand"><span class="protected">Protected by</span> <span class="visa s">VISA</span></span>
-        <span class="est"><span class="pre">est.</span> ~$0.01</span>
+        <span class="est" id="est"><span class="pre">est.</span> ~$0.01</span>
       </div>
     </div>
-    <div class="hint" id="hint">press <span class="key" id="key">&#8629; enter</span> to run</div>
+    <div class="hint" id="hint"><b>tap</b> to see what happens</div>
   </div>
 </section>
 
-<!-- ============ APP — the drill-down ============ -->
+<!-- ============ APP ============ -->
 <div id="app"><div class="wrap">
   <div class="eyebrow">Visa &middot; agent spend protection</div>
   <h1 id="title">How it works</h1>
-  <p class="lede" id="lede">You just ran a protected task. Here is how it works &mdash; tap a step to go deeper.</p>
+  <p class="lede" id="lede">You just ran a protected task. Here is how it works &mdash; tap any step to go deeper.</p>
   <div class="crumbs" id="crumbs"><span class="crumb on">How it works</span></div>
 
   <!-- LEVEL 1 -->
   <section class="level show" id="level1">
-    <div class="node lead stagger">
-      <div class="top"><span class="num">1</span><h3>You ask</h3></div>
+    <div class="node lead stagger" data-go="2">
+      <div class="top"><span class="num">1</span><h3>You ask</h3><span class="more">&rarr;</span></div>
       <p>The price and <span class="protected">Protected by</span> <span class="visa">VISA</span> appear right before you hit enter. No surprises.</p>
     </div>
     <div class="link-rail d1"><span class="bead"></span></div>
-    <div class="node stagger">
-      <div class="top"><span class="num">2</span><h3>We price it and protect it</h3></div>
+    <div class="node stagger" data-go="2">
+      <div class="top"><span class="num">2</span><h3>We price it and protect it</h3><span class="more">&rarr;</span></div>
       <p>An up-front estimate, then a guarantee. You are never billed more than you were shown.</p>
     </div>
     <div class="link-rail d2"><span class="bead"></span></div>
-    <div class="node stagger">
-      <div class="top"><span class="num">3</span><h3>We pick the right model</h3></div>
+    <div class="node stagger" data-go="2">
+      <div class="top"><span class="num">3</span><h3>We pick the right model</h3><span class="more">&rarr;</span></div>
       <p>The cheapest model that still does the job well for this kind of task. Not the most expensive by default.</p>
     </div>
     <div class="link-rail d3"><span class="bead"></span></div>
-    <div class="node tap stagger" data-go="2">
-      <div class="top"><span class="num">4</span><h3>It runs &mdash; you see the result</h3><span class="more">see the task &rarr;</span></div>
+    <div class="node stagger" data-go="2">
+      <div class="top"><span class="num">4</span><h3>It runs &mdash; you see the result</h3><span class="more">&rarr;</span></div>
       <p>What it cost, what it would have cost, and that it actually worked.</p>
     </div>
     <div class="link-rail d4"><span class="bead"></span></div>
-    <div class="node stagger">
-      <div class="top"><span class="num">5</span><h3>It gets smarter</h3></div>
+    <div class="node stagger" data-go="2">
+      <div class="top"><span class="num">5</span><h3>It gets smarter</h3><span class="more">&rarr;</span></div>
       <p>Every task teaches the system the cheapest way to get things right &mdash; so your costs keep falling.</p>
     </div>
     <div class="loop stagger"><span class="g">&#8635;</span> the savings compound every cycle</div>
@@ -231,14 +237,14 @@
 
   <!-- LEVEL 2 -->
   <section class="level" id="level2">
-    <p class="taskline stagger"><span class="q">&ldquo;</span>refactor the auth module and add tests<span class="q">&rdquo;</span></p>
+    <p class="taskline stagger" id="task2"><span class="q">&ldquo;</span>plan a 3-day trip to Lisbon<span class="q">&rdquo;</span></p>
     <div class="tiles stagger">
       <div class="tile"><div class="v accent">~$0.01</div><div class="l">protected price, came in under</div></div>
       <div class="tile"><div class="v">23&times;</div><div class="l">cheaper than the default model</div></div>
-      <div class="tile"><div class="v good">passed</div><div class="l">tests passed, code shipped</div></div>
+      <div class="tile"><div class="v good">great</div><div class="l">answer was complete and correct</div></div>
     </div>
     <div class="say stagger">
-      <p>We compared a few models, used the cheapest one that still passed your quality bar, and finished under the guaranteed price.</p>
+      <p>We compared a few models, used the cheapest one that still gave you a great answer, and finished under the guaranteed price.</p>
       <p>You stayed protected the whole time &mdash; the most a task like this could ever cost you was set before it ran.</p>
     </div>
     <button class="cta solid stagger" data-go="3">See how it was routed &rarr;</button>
@@ -247,23 +253,23 @@
   <!-- LEVEL 3 -->
   <section class="level" id="level3">
     <div class="echo stagger">
-      <div><span class="p">&gt;</span> refactor the auth module and add tests</div>
+      <div><span class="p">&gt;</span> <span id="task3">plan a 3-day trip to Lisbon</span></div>
       <div class="row2"><span class="p">protected by</span> <span class="v">VISA</span> &middot; est. ~$0.01</div>
     </div>
     <div class="stagger">
       <div class="step"><span class="dot"></span><h4>Understood the task</h4>
-        <p>Recognized it as a code change that needs tests. <span class="how">How it knew:</span> it read the shape of your request &mdash; no expensive model needed just to decide.</p></div>
+        <p>Recognized what kind of task it was. <span class="how">How it knew:</span> it read the shape of your request &mdash; no expensive model needed just to decide.</p></div>
       <div class="step"><span class="dot"></span><h4>Compared the options</h4>
         <p>We keep a constantly-updated read of which models are good enough for which work.</p>
         <div class="options">
-          <div class="opt win"><span class="m">gpt-4o-mini</span><span class="r"><span class="c">~$0.006</span><span class="verdict">does the job</span></span></div>
-          <div class="opt"><span class="m">gpt-4o</span><span class="r"><span class="c">~$0.14</span><span class="verdict">overkill</span></span></div>
-          <div class="opt"><span class="m">gpt-5.5</span><span class="r"><span class="c">~$0.40</span><span class="verdict">overkill</span></span></div>
+          <div class="opt win"><span class="m">small model</span><span class="r"><span class="c">~$0.006</span><span class="verdict">does the job</span></span></div>
+          <div class="opt"><span class="m">mid model</span><span class="r"><span class="c">~$0.14</span><span class="verdict">overkill</span></span></div>
+          <div class="opt"><span class="m">frontier model</span><span class="r"><span class="c">~$0.40</span><span class="verdict">overkill</span></span></div>
         </div></div>
       <div class="step"><span class="dot"></span><h4>Chose the cheapest that&rsquo;s good enough</h4>
-        <p>Picked the small model. Going pricier would have cost 23&times; more for the same passing result.</p></div>
-      <div class="step"><span class="dot"></span><h4>Ran, verified, and settled</h4>
-        <p>Tests passed, the code shipped, and the final cost landed at <b>$0.006</b> &mdash; under your guarantee.</p></div>
+        <p>Picked the small model. Going pricier would have cost 23&times; more for the same great result.</p></div>
+      <div class="step"><span class="dot"></span><h4>Checked it and settled</h4>
+        <p>Confirmed the answer was complete and correct, and the final cost landed at <b>$0.006</b> &mdash; under your guarantee.</p></div>
     </div>
     <button class="cta ghost stagger" data-go="2" style="margin-top:18px">&larr; Back to the task</button>
   </section>
@@ -274,19 +280,23 @@
 
 <script>
 (function(){
-  var TASK="refactor the auth module and add tests";
+  var PROMPTS=[
+    {t:"plan a 3-day trip to Lisbon",            amt:"~$0.01"},
+    {t:"summarize this report and flag the risks", amt:"~$0.10"},
+    {t:"what's a good gift for a 5-year-old?",   amt:"~$0.001"},
+    {t:"find the cheapest flights to New York",  amt:"~$0.10"}
+  ];
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ptext=document.getElementById('ptext'),caption=document.getElementById('caption'),
-      prompt=document.getElementById('prompt'),send=document.getElementById('send'),
-      key=document.getElementById('key'),hint=document.getElementById('hint'),
+  var ptext=document.getElementById('ptext'),caption=document.getElementById('caption'),est=document.getElementById('est'),
+      prompt=document.getElementById('prompt'),send=document.getElementById('send'),hint=document.getElementById('hint'),
       scene0=document.getElementById('scene0'),app=document.getElementById('app');
-  var timers=[],entered=false;
+  var timers=[],entered=false,cur=0,curTask=PROMPTS[0].t;
   function clr(){timers.forEach(clearTimeout);timers=[]}
   function at(ms,fn){timers.push(setTimeout(fn,ms))}
 
-  // ----- drill-down nav -----
+  // ---------- drill-down nav ----------
   var TITLES={
-    1:['How it works','You just ran a protected task. Here is how it works — tap a step to go deeper.'],
+    1:['How it works','You just ran a protected task. Here is how it works — tap any step to go deeper.'],
     2:['What this task accomplished','A real run, in plain terms — what it cost, and what it saved you.'],
     3:['How it was routed','The same task, one level deeper — how it chose, and how it knew.']
   };
@@ -300,50 +310,56 @@
     CRUMBS[n].forEach(function(c,idx){
       if(idx)cb.insertAdjacentHTML('beforeend','<span class="sepc">&rsaquo;</span>');
       var last=idx===CRUMBS[n].length-1;
-      var s=document.createElement('span');s.className='crumb '+(last?'on':'link');s.textContent=c[0];
-      s.addEventListener('click',function(){go(c[1])});cb.appendChild(s);
+      cb.insertAdjacentHTML('beforeend','<span class="crumb '+(last?'on':'link')+'" data-go="'+c[1]+'">'+c[0]+'</span>');
     });
     window.scrollTo({top:0,behavior:'smooth'});
   }
-  document.querySelectorAll('[data-go]').forEach(function(e){e.addEventListener('click',function(){go(parseInt(e.getAttribute('data-go'),10))})});
 
-  // ----- enter the app -----
+  // ---------- enter the app ----------
   function enterApp(){
     if(entered)return;entered=true;clr();
+    document.getElementById('task2').innerHTML='<span class="q">“</span>'+curTask+'<span class="q">”</span>';
+    document.getElementById('task3').textContent=curTask;
     scene0.classList.add('out');
-    at(reduce?0:500,function(){
-      scene0.style.display='none';app.style.display='block';go(1);
-      window.scrollTo({top:0});
-    });
+    at(reduce?0:480,function(){scene0.style.display='none';app.style.display='block';go(1);window.scrollTo({top:0})});
   }
 
-  // ----- scene 0 animation -----
-  function playPrompt(){
-    if(reduce){
-      ptext.classList.remove('empty');ptext.innerHTML=TASK+'<span class="caret blink"></span>';
-      caption.classList.add('show');prompt.classList.add('focus');return;
-    }
-    at(260,function(){prompt.classList.add('focus');ptext.classList.remove('empty');ptext.innerHTML='<span class="caret blink"></span>'});
-    var start=560,per=42;
-    for(var c=0;c<=TASK.length;c++){(function(c){at(start+c*per,function(){ptext.innerHTML=TASK.slice(0,c)+'<span class="caret"></span>'})})(c)}
-    var typed=start+TASK.length*per;
-    at(typed+360,function(){caption.classList.add('show');ptext.innerHTML=TASK+'<span class="caret blink"></span>'});
-    at(typed+1300,function(){key.classList.add('press');send.classList.add('press');prompt.classList.add('fire');hint.style.opacity='.4'});
-    at(typed+1460,function(){key.classList.remove('press');send.classList.remove('press')});
-    at(typed+2150,enterApp);
+  // ---------- single delegated handler (robust on touch) ----------
+  function handle(e){
+    var en=e.target.closest('[data-enter]'); if(en){enterApp();return;}
+    var g=e.target.closest('[data-go]'); if(g){go(parseInt(g.getAttribute('data-go'),10));}
   }
-  // skip / manual enter
-  send.addEventListener('click',enterApp);
-  prompt.addEventListener('click',function(e){if(e.target===send)return;enterApp()});
-  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!entered)enterApp()});
-  document.getElementById('restart').addEventListener('click',function(){
-    entered=false;app.style.display='none';scene0.style.display='flex';scene0.classList.remove('out');
-    prompt.classList.remove('focus','fire');caption.classList.remove('show');
+  document.addEventListener('click',handle);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){ if(!entered){enterApp();} }
+  });
+  document.getElementById('restart').addEventListener('click',function(e){
+    e.stopPropagation();entered=false;app.style.display='none';scene0.style.display='flex';scene0.classList.remove('out');
+    cur=0;curTask=PROMPTS[0].t;prompt.classList.remove('focus','fire');caption.classList.remove('show');
     ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';hint.style.opacity='1';
-    window.scrollTo({top:0});playPrompt();
+    window.scrollTo({top:0});loop();
   });
 
-  playPrompt();
+  // ---------- scene 0 prompt loop ----------
+  function loop(){
+    if(entered)return;clr();
+    var P=PROMPTS[cur%PROMPTS.length];curTask=P.t;
+    caption.classList.remove('show');prompt.classList.remove('focus','fire');
+    ptext.classList.add('empty');ptext.innerHTML='Ask anything<span class="caret blink"></span>';
+    if(reduce){
+      ptext.classList.remove('empty');ptext.innerHTML=P.t+'<span class="caret blink"></span>';
+      est.innerHTML='<span class="pre">est.</span> '+P.amt;caption.classList.add('show');prompt.classList.add('focus');return;
+    }
+    at(220,function(){prompt.classList.add('focus');ptext.classList.remove('empty');ptext.innerHTML='<span class="caret blink"></span>'});
+    var start=460,per=40,t=P.t;
+    for(var c=0;c<=t.length;c++){(function(c){at(start+c*per,function(){ptext.innerHTML=t.slice(0,c)+'<span class="caret"></span>'})})(c)}
+    var typed=start+t.length*per;
+    at(typed+340,function(){est.innerHTML='<span class="pre">est.</span> '+P.amt;caption.classList.add('show');ptext.innerHTML=t+'<span class="caret blink"></span>'});
+    at(typed+360,function(){send.classList.add('press')});
+    at(typed+520,function(){send.classList.remove('press')});
+    at(typed+2400,function(){cur++;loop()});
+  }
+  loop();
 })();
 </script>
 </body>
